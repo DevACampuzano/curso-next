@@ -1,0 +1,8 @@
+@reference "tailwindcss";
+.link{
+    @apply hover:underline hover:text-blue-400 transition-all
+}
+
+.active-link{
+    @apply text-blue-500
+}
