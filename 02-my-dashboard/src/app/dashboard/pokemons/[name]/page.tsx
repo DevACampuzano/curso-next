@@ -2,15 +2,22 @@ import { Pokemon } from "@/pokemons";
 import { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { getPokemons } from "../page";
 
 interface PokemonPageProps {
-  params: Promise<{ id: string }>;
+  params: Promise<{ name: string }>;
 }
 
 export async function generateStaticParams() {
-  const pokemons = Array.from({ length: 151 }, (_, i) => ({
-    id: (i + 1).toString(),
-  }));
+  // const pokemons = Array.from({ length: 151 }, (_, i) => ({
+  //   id: (i + 1).toString(),
+  // }));
+
+  const pokemons = await getPokemons(151).then((res) =>
+    res.map(({ name }) => ({
+      name,
+    }))
+  );
 
   return pokemons;
 }
@@ -19,8 +26,8 @@ export async function generateMetadata(
   props: PokemonPageProps
 ): Promise<Metadata> {
   try {
-    const { id } = await props.params;
-    const { name } = await getPokemon(id);
+    const { name } = await props.params;
+    const { id } = await getPokemon(name);
     return {
       title: `#${id} - ${name}`,
       description: `Pagina del pokémon ${name}`,
@@ -33,9 +40,9 @@ export async function generateMetadata(
   }
 }
 
-const getPokemon = async (id: string): Promise<Pokemon> => {
+const getPokemon = async (name: string): Promise<Pokemon> => {
   try {
-    const pokemon = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`, {
+    const pokemon = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`, {
       // cache: "force-cache",
       next: {
         revalidate: 60 * 60 * 30 * 6,
@@ -50,8 +57,8 @@ const getPokemon = async (id: string): Promise<Pokemon> => {
 };
 
 export default async function PokemonPage({ params }: PokemonPageProps) {
-  const { id } = await params;
-  const pokemon = await getPokemon(id);
+  const { name } = await params;
+  const pokemon = await getPokemon(name);
   return (
     <div className="flex mt-5 flex-col items-center text-slate-800">
       <div className="relative flex flex-col items-center rounded-[20px] w-[700px] mx-auto bg-white bg-clip-border  shadow-lg  p-3">
