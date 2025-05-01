@@ -3,6 +3,7 @@ import {
   IoBrowsersOutline,
   IoCalculator,
   IoFootball,
+  IoHeartOutline,
   IoLogoReact,
 } from "react-icons/io5";
 import { Props as PropsMenuItem, SibarMenuItem } from "./SibarMenuItem";
@@ -25,6 +26,12 @@ const menuItems: PropsMenuItem[] = [
     path: "/dashboard/pokemons",
     title: "Pokemons",
     subtitle: "Generación Estática",
+  },
+  {
+    icon: <IoHeartOutline size={40} />,
+    path: "/dashboard/favorites",
+    title: "Favoritos",
+    subtitle: "Gobal State",
   },
 ];
 
