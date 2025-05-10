@@ -5,13 +5,13 @@ export const metadata = {
   //  description: '151 Pokémons',
 };
 
-export default async function PokemonsPage() {
+export default function PokemonsPage() {
   return (
     <div className="flex flex-col p-2">
       <span className="text-5xl my-2">
         Pokémons Favoritos <small className="text-blue-500">estático</small>
       </span>
-      <PokemosnGrid pokemons={[]} />
+      <PokemosnGrid pokemons={[]} favorite />
     </div>
   );
 }
