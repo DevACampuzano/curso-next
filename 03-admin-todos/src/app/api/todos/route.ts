@@ -1,6 +1,8 @@
 import prisma from "@/lib/prisma";
+import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import * as yup from "yup";
+import { authOptions } from "../auth/[...nextauth]/route";
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const take = Number(searchParams.get("take")) ?? "10";
@@ -24,6 +26,10 @@ const postSchema = yup.object({
 });
 
 export async function POST(request: Request) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user) {
+    return NextResponse.json("No autorizado", { status: 401 });
+  }
   try {
     const { description, completed } = await postSchema.validate(
       await request.json()
@@ -33,6 +39,7 @@ export async function POST(request: Request) {
       data: {
         description,
         completed,
+        userId: session.user.id,
       },
     });
     return NextResponse.json(todo);

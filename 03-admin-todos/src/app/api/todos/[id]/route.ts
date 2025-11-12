@@ -2,6 +2,8 @@ import prisma from "@/lib/prisma";
 import * as yup from "yup";
 import { NextResponse } from "next/server";
 import { Todo } from "@/generated/prisma";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../../auth/[...nextauth]/route";
 
 interface Segments {
   params: Promise<{
@@ -10,9 +12,14 @@ interface Segments {
 }
 
 const getTodo = async (id: string): Promise<Todo | null> => {
+  const session = await getServerSession(authOptions);
+  if (!session?.user) {
+    return null;
+  }
   const todo = await prisma.todo.findFirst({
     where: {
       id: id,
+      userId: session.user.id,
     },
   });
   return todo;

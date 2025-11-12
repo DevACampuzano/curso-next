@@ -1,17 +1,18 @@
 "use client";
-// import * as todoApi from "@/todos/helpers/todos";
-// import { useRouter } from "next/navigation";
+import * as todoApi from "@/todos/helpers/todos";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { IoTrashOutline } from "react-icons/io5";
-import { addTodo, deleteCompletedTodos } from "../actions/todo-actions";
+import { deleteCompletedTodos } from "../actions/todo-actions";
 
 export const NewTodo = () => {
   const [description, setDescription] = useState("");
-  // const router = useRouter();
+  const router = useRouter();
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (description.trim() === "") return;
-    await addTodo(description);
+    await todoApi.createTodo(description);
+    router.refresh();
     setDescription("");
   };
 
